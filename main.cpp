@@ -14,10 +14,23 @@ int offset = 60;
 
 double lastUpdateTime = 0;
 
+bool operator == (const Vector2 &v1, const Vector2 &v2)
+{
+   if (v1.x == v2.x && v1.y == v2.y)
+      return true;
+  return false;
+}
+
+Vector2 operator +(const Vector2 &v1, const Vector2 &v2)
+{
+    Vector2 tmp;
+    tmp.x = v1.x + v2.x;
+    tmp.y = v1.y + v2.y;
+    return tmp;
+}
 bool ElementInDeque(Vector2 elem, deque<Vector2> deque) {
     for (unsigned int i = 0; i < deque.size(); i++) {
-        //TO DO overload ==
-        if (Vector2Equals(deque[i], elem)) {
+        if (deque[i] == elem) {
             return true;
         }
     }
@@ -53,7 +66,8 @@ public:
 
     void Update() {
 
-        body.push_front(Vector2Add(body[0], direction));
+        //+ operator
+        body.push_front(body[0] + direction);
         if(addSegment == true) {
             //eat food
             
@@ -61,7 +75,6 @@ public:
         } else { 
             //move
             body.pop_back();
-            //TODO overload the + operator for Vector2 type
         }
     }
     void Reset() {
@@ -148,7 +161,7 @@ public:
     }
 
     void CheckColisionWithFood(){
-        if (Vector2Equals(snake.body[0], food.position)) {
+        if (snake.body[0] == food.position) {
             food.position = food.GenerateRandomPos(snake.body);
             snake.addSegment = true;
             score ++;
@@ -168,7 +181,7 @@ public:
     void CheckColisionWithTail() {
         Vector2 head = snake.body[0];
         for(unsigned i = 1; i < snake.body.size(); i++) {
-            if (Vector2Equals(head, snake.body[i])) {
+            if (head == snake.body[i]) {
                 GameOver();
             }
         }
